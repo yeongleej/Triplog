@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.travel.route.repository.ReviewRepository">
+    <select id="selectAll" resultType="com.example.travel.route.entity.Review">
+        select * from review
+    </select>
+
+    <select id="selectOne" parameterType="long" resultType="com.example.travel.route.entity.Review">
+        select * from review
+        where review_id = #{review_id}
+    </select>
+
+    <insert id="regist" parameterType="com.example.travel.route.entity.Review">
+        insert into review (place_id, review_text, review_imgs)
+        values (#{place_id}, #{review_text}, #{review_imgs})
+    </insert>
+
+    <update id="modify" parameterType="com.example.travel.route.entity.Review">
+        update review set review_text = #{review_text}, review_img = #{review_imgs}
+        where review_id = #{review_id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from review
+        where review_id = #{review_id}
+    </delete>
+</mapper>

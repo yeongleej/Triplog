@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.travel.route.repository.RouteRepository">
+
+    <select id="findRouteById" parameterType="long" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+        and r.route_id = #{route_id}
+    </select>
+
+    <select id="findRouteByName" parameterType="String" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+        and r.route_name like concat('%', #{route_name}, '%')
+    </select>
+
+    <select id="findRouteByKeyName" parameterType="String" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+          and k.keyword = #{keyword}
+    </select>
+
+    <select id="findRouteByKeyNameTop3" parameterType="String" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+          and k.keyword = #{keyword}
+        order by r.route_id desc limit 3
+    </select>
+
+    <select id="findRouteByCityName" parameterType="String" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+          and c.city_name = #{city_name}
+    </select>
+
+
+    <select id="findAllRoute" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id;
+    </select>
+
+    <select id="findRouteByKeyword" parameterType="long" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+        and r.key_id = #{key_id}
+    </select>
+
+    <select id="findRouteByUser" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+        and r.uid = #{uid}
+        order by route_id desc limit 3
+    </select>
+    <select id="findAllRouteByUser" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+          and r.uid = #{uid}
+    </select>
+
+    <select id="findRouteBySpot" resultType="com.example.travel.route.dto.response.RouteResponseDto">
+        select r.route_id, c.city_name, k.keyword, r.route_name, r.route_day, img.img_url
+        from route r, cities c, keyword_list k, routeimage img, route_place rp
+        where r.route_id = img.route_id and r.city_id = c.city_id and r.key_id = k.key_id
+        and r.route_id = rp.route_id and rp.rp_name like concat('%', #{spot_name} ,'%');
+    </select>
+
+    <insert id="addRoute" parameterType="com.example.travel.route.dto.request.RouteCreateDto" useGeneratedKeys="true" keyProperty="route_id">
+        insert into route(uid, city_id, key_id, route_name, route_day)
+        values (#{uid},#{city_id},#{key_id},#{route_name},#{route_day})
+    </insert>
+
+    <delete id="delete" parameterType="long">
+        delete from route
+        where route_id = #{route_id}
+    </delete>
+
+    <update id="modify" parameterType="com.example.travel.route.entity.Route">
+        update route
+        set city_id=#{city_id}, key_id=#{key_id}, route_name=#{route_name}, route_day=#{route_day}
+        where route_id = #{route_id}
+    </update>
+
+</mapper>

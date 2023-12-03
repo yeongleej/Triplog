@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.travel.route.repository.CitiesRepository">
+
+    <select id="findCitiesById" parameterType="long" resultType="com.example.travel.route.entity.Cities">
+        select * from cities
+        where city_id=#{city_id}
+    </select>
+
+    <select id="findAllCities" resultType="com.example.travel.route.entity.Cities">
+        select * from cities
+    </select>
+
+    <insert id="addCities" parameterType="com.example.travel.route.entity.Cities">
+        insert into cities(city_name)
+        values (#{city_name})
+    </insert>
+
+    <delete id="delete" parameterType="long" >
+        delete from cities
+        where city_id = #{city_id}
+    </delete>
+
+    <update id="modify" parameterType="com.example.travel.route.entity.Cities">
+        update cities set city_name = #{city_name}
+        where city_id = #{city_id}
+    </update>
+
+
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.travel.route.repository.SpotInfoRepository">
+    <select id="findAllSpotInfo" resultType="com.example.travel.route.entity.SpotInfo">
+        select * from spot_info
+    </select>
+
+    <select id="findSpotInfoById" parameterType="long" resultType="com.example.travel.route.entity.SpotInfo">
+        select * from spot_info
+        where spot_id = #{spot_id}
+    </select>
+
+    <select id="findSpotInfoByName" resultType="com.example.travel.route.entity.SpotInfo">
+        select *
+        from spot_info
+        where spot_name like concat('%', #{spotName} ,'%')
+    </select>
+
+    <insert id="addSpotInfo" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="spot_id">
+        insert into spot_info (spot_name, address, latitude, longitude)
+        values
+        <foreach collection="list" item="spot" separator=",">
+            (
+            #{spot.spot_name}, #{spot.address}, #{spot.latitude}, #{spot.longitude}
+            )
+        </foreach>
+    </insert>
+
+    <insert id="addOneSpotInfo" parameterType="com.example.travel.route.entity.SpotInfo" useGeneratedKeys="true" keyProperty="spot_id">
+        insert into spot_info (spot_name, address, latitude, longitude)
+        values (#{spot_name}, #{address}, #{latitude}, #{longitude})
+    </insert>
+
+    <update id="modify" parameterType="com.example.travel.route.entity.SpotInfo">
+        update spot_info set spot_name=#{spot_name}, address=#{address}, latitude=#{latitude}, longitude=#{longitude}
+        where spot_id=#{spot_id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from spot_info
+        where spot_id=#{spot_id}
+    </delete>
+</mapper>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.travel.route.repository.RoutePlaceRepository">
+    <select id="findAllRoutePlace" resultType="com.example.travel.route.entity.RoutePlace">
+        select * from route_place
+    </select>
+
+    <select id="findRoutePlaceById" parameterType="long" resultType="com.example.travel.route.entity.RoutePlace">
+        select * from route_place
+        where place_id = #{place_id}
+    </select>
+    <select id="findRoutePlaceByRoute" parameterType="long" resultType="com.example.travel.route.entity.RoutePlace">
+        select * from route_place
+        where route_id = #{route_id}
+    </select>
+
+    <insert id="addRoutePlace" parameterType="com.example.travel.route.entity.RoutePlace" useGeneratedKeys="true" keyProperty="place_id">
+        insert into route_place (spot_id, route_id, rp_name, priority, visit_time)
+        values (#{spot_id}, #{route_id}, #{rp_name}, #{priority}, #{visit_time})
+    </insert>
+
+    <delete id="deleteById" parameterType="Long">
+        delete from route_place
+        where place_id =#{place_id}
+    </delete>
+    <update id="modifyPriorityById" parameterType="com.example.travel.route.dto.request.PlaceModifyDto">
+        update route_place set priority=#{priority}
+        where place_id = #{place_id}
+    </update>
+
+    <update id="modify" parameterType="com.example.travel.route.entity.RoutePlace">
+        update route_place set spot_id =#{spot_id}, route_id=#{route_id}, rp_name=#{rp_name}, priority=#{priority}, visit_time=#{visit_time}
+        where place_id = #{place_id}
+    </update>
+
+    <delete id="delete" parameterType="long">
+        delete from route_place
+        where place_id = #{place_id}
+    </delete>
+</mapper>

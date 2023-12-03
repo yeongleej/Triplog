@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.example.travel.board.repository.BoardRepository">
+
+    <resultMap type="com.example.travel.board.entity.Board" id="article">
+        <result column="article_no" property="articleNo"/>
+        <result column="uid" property="uid"/>
+        <result column="nickname" property="nickname"/>
+        <result column="subject" property="subject"/>
+        <result column="content" property="content"/>
+        <result column="hit" property="hit"/>
+        <result column="register_time" property="registerTime"/>
+    </resultMap>
+
+    <insert id="writeArticle" parameterType="com.example.travel.board.entity.Board">
+        insert into board (uid, subject, content, hit, register_time)
+        values (#{uid}, #{subject}, #{content}, 0, now())
+        <selectKey resultType="long" keyProperty="articleNo" order="AFTER">
+            select last_insert_id()
+        </selectKey>
+    </insert>
+
+    <sql id="search">
+        <if test="word != null and word != ''">
+            <if test="key == 'subject'">
+                and subject like concat('%', #{word}, '%')
+            </if>
+            <if test="key != 'subject'">
+                and ${key} = #{word}
+            </if>
+        </if>
+    </sql>
+
+    <select id="listArticle" parameterType="map" resultMap="article">
+        select b.article_no, b.uid, b.subject, b.content, b.hit, b.register_time, m.nickname
+        from board b, user m
+        where b.uid = m.uid
+        <include refid="search"></include>
+        order by b.article_no desc
+        limit #{start}, #{listsize}
+    </select>
+
+    <select id="getTotalArticleCount" parameterType="map" resultType="int">
+        select count(article_no)
+        from board b, user m
+        <where>
+            <include refid="search"></include>
+        </where>
+    </select>
+
+    <select id="getArticle" parameterType="long" resultMap="article">
+        select b.article_no, b.uid, b.subject, b.content, b.hit, b.register_time, m.nickname
+        from board b, user m
+        where b.uid = m.uid
+          and b.article_no = #{articleNo}
+    </select>
+
+
+    <update id="updateHit" parameterType="long">
+        update board
+        set hit = hit + 1
+        where article_no = #{articleNo}
+    </update>
+
+    <update id="modifyArticle" parameterType="com.example.travel.board.entity.Board">
+        update board
+        set subject = #{subject}, content = #{content}
+        where article_no = #{articleNo}
+    </update>
+
+
+    <delete id="deleteArticle" parameterType="long">
+        delete from board
+        where article_no = #{articleNo}
+    </delete>
+
+</mapper>
